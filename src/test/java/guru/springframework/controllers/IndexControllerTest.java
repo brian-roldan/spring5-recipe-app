@@ -16,6 +16,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,8 +30,8 @@ public class IndexControllerTest {
 	IndexController indexController;
 	
 	@Mock RecipeService recipeService;
-	
 	@Mock Model model;
+	@Captor ArgumentCaptor<Set<Recipe>> argumentCaptor;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -39,7 +40,7 @@ public class IndexControllerTest {
 	}
 	
 	@Test
-	public void testMockMVC() throws Exception {
+	public void testMockMVCSlashUrl() throws Exception {
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
 		
 		mockMvc.perform(get("/"))
@@ -49,7 +50,7 @@ public class IndexControllerTest {
 	}
 	
 	@Test
-	public void testMockBlank() throws Exception {
+	public void testMockMVCBlankUrl() throws Exception {
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
 		
 		mockMvc.perform(get(""))
@@ -65,16 +66,14 @@ public class IndexControllerTest {
 		recipes.add(new Recipe());
 		
 		when(recipeService.getRecipes()).thenReturn(recipes);
-		
-		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 		String indexPage = "index";
-		String recipesModelAttribute = "recipes";
+		String recipesModelAttributeKey = "recipes";
 		
 		String indexPageResult = indexController.getIndexPage(model);
 		
 		assertEquals(indexPage, indexPageResult);
 		verify(recipeService, times(1)).getRecipes();
-		verify(model, times(1)).addAttribute(eq(recipesModelAttribute), argumentCaptor.capture());
+		verify(model, times(1)).addAttribute(eq(recipesModelAttributeKey), argumentCaptor.capture());
 		
 		Set<Recipe> recipesFromController = argumentCaptor.getValue();
 		assertEquals(recipes.size(), recipesFromController.size());
