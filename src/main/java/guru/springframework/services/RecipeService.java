@@ -9,7 +9,7 @@ import guru.springframework.domain.Recipe;
  * Created by jt on 6/13/17.
  */
 public interface RecipeService {
-
+	
     Set<Recipe> getRecipes();
 
 	Recipe findById(long id);
@@ -17,4 +17,7 @@ public interface RecipeService {
 	RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
 
 	RecipeCommand findRecipeCommandById(Long recipeId);
+	
+	void deleteRecipeCommand(Long recipeId);
+	
 }
