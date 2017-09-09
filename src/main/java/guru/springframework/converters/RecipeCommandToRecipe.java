@@ -1,6 +1,7 @@
 package guru.springframework.converters;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 import org.springframework.core.convert.converter.Converter;
@@ -43,7 +44,10 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         recipe.setServings(source.getServings());
         recipe.setSource(source.getSource());
         recipe.setUrl(source.getUrl());
-        recipe.setNotes(notesConverter.convert(source.getNotes()));
+        
+		if (nonNull(source.getNotes())) {
+			recipe.setNotes(notesConverter.convert(source.getNotes()));
+		}
 
         if (!isEmpty(source.getCategories())){
             source.getCategories()
